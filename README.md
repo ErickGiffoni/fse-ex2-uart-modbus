@@ -73,6 +73,8 @@ O código pode ser testado no Linux, porém terá que ser compilado para rodar n
 O código base em C para o uso da UART no Raspberry Pi se encontra em: 
 [Código UART](https://gitlab.com/fse_fga/uart_raspberry_pi)
 
+A função de CRC-16 a ser utilizada encontra-se na pasta CRC deste repositório.
+
 ## 7 - REFERÊNCIAS
 
 Especificações do MODBUS:  
