@@ -45,16 +45,16 @@ Neste exercício, vamos modificar os códigos do Exercício 01 para nos adequar 
 | **0x23** | **0xA1** |	Solicitação de dado inteiro: **integer** | int (4 bytes) |
 | **0x23** | **0xA2** |	Solicitação de dado real: **float**	| float (4 bytes) |
 | **0x23** | **0xA3** |	Solicitação de dado do tipo string: **char[]** | char (1 byte com o tamanho da string) + char[]( nbytes com o conteúdo da string) |
-| **0x23** | **0xB1** |	Envio de um dado no formato **integer**	| int (4 bytes)
-| **0x23** |  **0xB2** |	Envio de um dado no formato **float** | float (4 bytes)
-| **0x23** |  **0xB3** |	Envio de uma string: **char[]**	| char (1 byte com o tamanho da string) + char[]( nbytes com o conteúdo da string)
+| **0x16** | **0xB1** |	Envio de um dado no formato **integer**	| int (4 bytes)
+| **0x16** |  **0xB2** |	Envio de um dado no formato **float** | float (4 bytes)
+| **0x16** |  **0xB3** |	Envio de uma string: **char[]**	| char (1 byte com o tamanho da string) + char[]( nbytes com o conteúdo da string)
 
 Neste caso, como exemplo, a mensagem completa para a solicitação de um inteiro será:
 
 | Mensagem | *A.* Endereço do dispositivo | *B.* Código da função  | *C.* Dados  | *D.* CRC-16  |
 |:--|:-:|:-:|:-:|:-:|
 | Solicita inteiro | **0x01** | **0x23** | **0xA1** | 2 bytes |
-| Envia o inteiro 3245 | **0x01** | **0x23** | **0xB1** | 2 bytes |
+| Envia o inteiro 3245 | **0x01** | **0x16** | **0xB1** 0x00 0x00 0x0C 0xAD | 2 bytes |
 
 ## 5 - ROTEIRO
 
