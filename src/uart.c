@@ -71,7 +71,7 @@ void sendString(char *message, int msgLength){
 
    short crc16 = calcula_CRC(package, pkgLength-2);
 
-   memcpy(package[pkgLength-2], &crc16, 2);
+   memcpy(&package[pkgLength-2], &crc16, 2);
 
    int numOfBytesWritten = 0;
    numOfBytesWritten = write(uartDescriptor, &package[0], pkgLength);
