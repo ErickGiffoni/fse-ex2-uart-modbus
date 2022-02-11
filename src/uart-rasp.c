@@ -20,6 +20,8 @@ int main(){
    sendString("alo sou eu bola de fogo", 23);
    getStringResponse();
 
+   sendInt(49);
+
    closeUart();
 
    return 0;
