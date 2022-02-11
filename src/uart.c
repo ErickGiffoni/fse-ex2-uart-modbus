@@ -21,6 +21,7 @@
 #include <stdlib.h>     // malloc
 #include <unistd.h>     // write
 #include <string.h>     // strncpy
+#include <termios.h>    // tcgetattr, struct termios...
 #include <stdio.h>
 
 static int uartDescriptor = -1;
@@ -58,13 +59,39 @@ void setCommunicationOptions(){
    return;
 } // end of setCommunicationOptions
 
+/**
+ * Configures the message package according to MODBUS-RTU p2p
+ * 
+ * @param package The package to be configured
+ * @param isItARequest If equals to 0, then it is not a request, meaning the user is not requesting info but sending
+ * @param dataType 0 for string, 1 for int, 2 for float
+ */
+void configurePackage(char *package, char isItARequest, int dataType){
+   package[0]  =  DEVICE_ADDRESS;
+   package[1]  =  isItARequest ? CODE_23 : CODE_16;
+
+   switch (dataType){
+      case 0:
+      /* string */
+         package[2]  =  SEND_STRING_CODE;
+         break;
+   
+      default:
+         printf("configurePackage: wrong data type!\nExiting...\n");
+         exit(2);
+   }
+
+   return;
+}
+
 void sendString(char *message, int msgLength){
    int pkgLength = 4+msgLength+2;
    char *package = (char *) malloc(pkgLength * sizeof(char));
 
-   package[0]  =  DEVICE_ADDRESS;
-   package[1]  =  CODE_16;
-   package[2]  =  SEND_STRING_CODE;
+   configurePackage(package, 0, 0);
+   // package[0]  =  DEVICE_ADDRESS;
+   // package[1]  =  CODE_16;
+   // package[2]  =  SEND_STRING_CODE;
    package[3]  =  msgLength;
 
    strncpy(package+4, message, msgLength);   // without \0
