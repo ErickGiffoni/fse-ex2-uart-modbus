@@ -59,6 +59,20 @@ void setCommunicationOptions(){
    return;
 } // end of setCommunicationOptions
 
+void writeToUart(char *package, int pkgLength){
+   int numOfBytesWritten = 0;
+   numOfBytesWritten = write(uartDescriptor, &package[0], pkgLength);
+
+   return;
+} // end of writeToUart
+
+void setCrc(char *package, int pkgLength){
+   short crc16 = calcula_CRC(package, pkgLength-2);
+   memcpy(&package[pkgLength-2], &crc16, 2);
+
+   return;
+} // end of setCrc
+
 /**
  * Configures the message package according to MODBUS-RTU p2p
  * 
@@ -74,6 +88,11 @@ void configurePackage(char *package, char isItARequest, int dataType){
       case 0:
       /* string */
          package[2]  =  SEND_STRING_CODE;
+         break;
+         
+      case 1:
+      /* int */
+         package[2]  =  SEND_INT_CODE;
          break;
    
       default:
@@ -106,12 +125,9 @@ void sendString(char *message, int msgLength){
 
    strncpy(package+4, message, msgLength);   // without \0
 
-   short crc16 = calcula_CRC(package, pkgLength-2);
+   setCrc(package, pkgLength);
 
-   memcpy(&package[pkgLength-2], &crc16, 2);
-
-   int numOfBytesWritten = 0;
-   numOfBytesWritten = write(uartDescriptor, &package[0], pkgLength);
+   writeToUart(package, pkgLength);
 
    free(package);
 
@@ -145,3 +161,20 @@ void getStringResponse(){
 
    return;
 } // end of getStringResponse
+
+void sendInt(int number){
+   char package[INT_PKG_LEN];
+   configurePackage(package, 0, 1);
+
+   snprintf(&package[3], 4, "%X", number);
+
+   setCrc(package, INT_PKG_LEN);
+
+   writeToUart(package, INT_PKG_LEN);
+
+   return;
+} // end of sendInt
+
+// void getIntResponse(){
+
+// } // end of getIntResponse
