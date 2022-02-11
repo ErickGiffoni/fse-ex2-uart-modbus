@@ -140,7 +140,7 @@ void getStringResponse(){
          return;
       }
 
-      printf("getStringResponse: received %d bytes: %s\n", pkgLength, package); // printing package can go south here
+      printf("getStringResponse: received %d bytes: %s\n", pkgLength, &package[4]); // printing package can go south here
    }
 
    return;
