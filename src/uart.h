@@ -23,7 +23,9 @@
 void openUart(char *path);
 void closeUart();
 void setCommunicationOptions();
+char verifyCrc(char *package, int pkgLength);
 
 void sendString(char *message, int msgLength);
+void getStringResponse();
 
 #endif

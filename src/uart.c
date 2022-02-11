@@ -82,16 +82,26 @@ void configurePackage(char *package, char isItARequest, int dataType){
    }
 
    return;
-}
+} // end of configurePackage
+
+char verifyCrc(char *package, int pkgLength){
+   short crc16       = calcula_CRC(package, pkgLength-2);
+   short providedCrc = 0;
+   memcpy(&providedCrc, &package[pkgLength-2], 2);
+
+   if(crc16 != providedCrc){
+      printf("verifyCrc: CRC error detected!\n");
+      return 0;
+   }
+
+   return 1;
+} // end of verifyCrc
 
 void sendString(char *message, int msgLength){
    int pkgLength = 4+msgLength+2;
    char *package = (char *) malloc(pkgLength * sizeof(char));
 
    configurePackage(package, 0, 0);
-   // package[0]  =  DEVICE_ADDRESS;
-   // package[1]  =  CODE_16;
-   // package[2]  =  SEND_STRING_CODE;
    package[3]  =  msgLength;
 
    strncpy(package+4, message, msgLength);   // without \0
@@ -103,5 +113,35 @@ void sendString(char *message, int msgLength){
    int numOfBytesWritten = 0;
    numOfBytesWritten = write(uartDescriptor, &package[0], pkgLength);
 
+   free(package);
+
    return;
 } // end of sendString
+
+void getStringResponse(){
+   char package[256];
+   sleep(2);   // waits a bit... get it? a bit lol
+
+   int pkgLength = read(uartDescriptor, (void *) package, 255);
+
+   if(pkgLength < 0){
+      printf("getStringResponse: read error\n");
+      exit(3);
+   } 
+   else if(pkgLength == 0){
+      printf("getStringResponse: got no response\n");
+      return;
+   }
+   else {
+      char crcVerified = verifyCrc(package, pkgLength);
+
+      if(!crcVerified){
+         printf("getStringResponse: provided CRC does not match\n");
+         return;
+      }
+
+      printf("getStringResponse: received %d bytes: %s\n", pkgLength, package); // printing package can go south here
+   }
+
+   return;
+} // end of getStringResponse
