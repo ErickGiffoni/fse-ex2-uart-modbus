@@ -13,8 +13,6 @@
 #ifndef  UART_H
 #define  UART_H
 
-#include <termios.h>    // tcgetattr, struct termios...
-
 #define DEVICE_ADDRESS     0x01
 
 #define CODE_23            0x23
