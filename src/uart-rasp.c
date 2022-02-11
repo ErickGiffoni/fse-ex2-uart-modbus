@@ -18,6 +18,7 @@ int main(){
    setCommunicationOptions();
 
    sendString("alo sou eu bola de fogo", 23);
+   getStringResponse();
 
    closeUart();
 
