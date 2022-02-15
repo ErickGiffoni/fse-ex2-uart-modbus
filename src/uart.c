@@ -166,9 +166,7 @@ void sendInt(int number){
    char package[INT_PKG_LEN];
    configurePackage(package, 0, 1);
 
-   snprintf(&package[3], 4, "%d", number);
-   // usar memcpy
-   // verificar resposta -> cabecalho e crc
+   memcpy(&package[3], &number, 4);
 
    setCrc(package, INT_PKG_LEN);
 
