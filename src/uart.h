@@ -19,9 +19,11 @@
 #define CODE_16            0x16
 
 #define INT_PKG_LEN        9     // 3+4+2
+#define FLOAT_PKG_LEN      9
 
 #define SEND_STRING_CODE   0xB3
 #define SEND_INT_CODE      0xB1
+#define SEND_FLOAT_CODE    0xB2
 
 void openUart(char *path);
 void closeUart();
@@ -36,5 +38,8 @@ void getStringResponse();
 
 void sendInt(int number);
 void getIntResponse();
+
+void sendFloat(float number);
+void getFloatResponse();
 
 #endif

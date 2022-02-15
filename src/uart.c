@@ -94,6 +94,11 @@ void configurePackage(char *package, char isItARequest, int dataType){
       /* int */
          package[2]  =  SEND_INT_CODE;
          break;
+
+      case 2:
+      /* float */
+         package[2]  =  SEND_FLOAT_CODE;
+         break;
    
       default:
          printf("configurePackage: wrong data type!\nExiting...\n");
@@ -178,5 +183,30 @@ void sendInt(int number){
 void getIntResponse(){
    getStringResponse();
 
+   // TO-DO: generaliizar get string
+   // TO-DO: verificar cabecalho
+
    return;
 } // end of getIntResponse
+
+void sendFloat(float number){
+   char package[FLOAT_PKG_LEN];
+   configurePackage(package, 0, 2);
+
+   memcpy(&package[3], &number, 4);
+
+   setCrc(package, FLOAT_PKG_LEN);
+
+   writeToUart(package, FLOAT_PKG_LEN);
+
+   return;
+} // end of sendFloat
+
+void getFloatResponse(){
+   getStringResponse();
+
+   // TO-DO: generaliizar get string
+   // TO-DO: verificar cabecalho
+
+   return;
+}

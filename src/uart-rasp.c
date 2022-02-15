@@ -23,6 +23,9 @@ int main(){
    sendInt(49);
    getIntResponse();
 
+   sendFloat(33.33);
+   getFloatResponse();
+
    closeUart();
 
    return 0;
