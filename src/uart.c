@@ -24,8 +24,10 @@
 #include <termios.h>    // tcgetattr, struct termios...
 #include <stdio.h>
 
-static int uartDescriptor = -1;
-static struct termios commOptions;
+static int              uartDescriptor = -1;
+static struct termios   commOptions;
+static char             responsePackage[RES_PKG_LEN+1];
+static int              globalResPkgLen = 0;
 
 void openUart(char *path){
    uartDescriptor = open(path, O_RDWR | O_NOCTTY | O_NDELAY);
@@ -121,6 +123,37 @@ char verifyCrc(char *package, int pkgLength){
    return 1;
 } // end of verifyCrc
 
+/**
+ * Reads a response from Rx
+*/
+void getResponse(){
+   memset(responsePackage, 0x00, RES_PKG_LEN);
+   sleep(2);   // waits a bit... get it? a bit lol
+
+   globalResPkgLen = read(uartDescriptor, (void *) responsePackage, RES_PKG_LEN);
+
+   if(globalResPkgLen < 0){
+      printf("getResponse: read error\n");
+      exit(3);
+   } 
+   else if(globalResPkgLen == 0){
+      printf("getResponse: got no response\n");
+      return;
+   }
+   else {
+      char crcVerified = verifyCrc(responsePackage, globalResPkgLen);
+
+      if(!crcVerified){
+         printf("getResponse: provided CRC does not match\n");
+         return;
+      }
+
+      printf("getResponse: received %d bytes\n", globalResPkgLen);
+   }
+
+   return;
+} // end of getResponse
+
 void sendString(char *message, int msgLength){
    int pkgLength = 4+msgLength+2;
    char *package = (char *) malloc(pkgLength * sizeof(char));
@@ -140,29 +173,15 @@ void sendString(char *message, int msgLength){
 } // end of sendString
 
 void getStringResponse(){
-   char package[256];
-   sleep(2);   // waits a bit... get it? a bit lol
+   getResponse();
 
-   int pkgLength = read(uartDescriptor, (void *) package, 255);
+   int messageLength = responsePackage[3];
+   char *resMessage  = (char *) malloc(messageLength*sizeof(char));
+   memcpy(resMessage, &responsePackage[4], messageLength);
 
-   if(pkgLength < 0){
-      printf("getStringResponse: read error\n");
-      exit(3);
-   } 
-   else if(pkgLength == 0){
-      printf("getStringResponse: got no response\n");
-      return;
-   }
-   else {
-      char crcVerified = verifyCrc(package, pkgLength);
+   printf("getStringResponse: got string: %s\n", resMessage);
 
-      if(!crcVerified){
-         printf("getStringResponse: provided CRC does not match\n");
-         return;
-      }
-
-      printf("getStringResponse: received %d bytes: %s\n", pkgLength, &package[4]); // printing package can go south here
-   }
+   // TO-DO: verificar cabecalho
 
    return;
 } // end of getStringResponse
@@ -181,9 +200,8 @@ void sendInt(int number){
 } // end of sendInt
 
 void getIntResponse(){
-   getStringResponse();
+   getResponse();
 
-   // TO-DO: generaliizar get string
    // TO-DO: verificar cabecalho
 
    return;
@@ -203,9 +221,8 @@ void sendFloat(float number){
 } // end of sendFloat
 
 void getFloatResponse(){
-   getStringResponse();
+   getResponse();
 
-   // TO-DO: generaliizar get string
    // TO-DO: verificar cabecalho
 
    return;

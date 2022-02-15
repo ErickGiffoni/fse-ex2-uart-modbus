@@ -18,6 +18,7 @@
 #define CODE_23            0x23
 #define CODE_16            0x16
 
+#define RES_PKG_LEN        255   // length of response
 #define INT_PKG_LEN        9     // 3+4+2
 #define FLOAT_PKG_LEN      9
 
@@ -32,6 +33,8 @@ void writeToUart(char *package, int pkgLength);
 
 void setCrc(char *package, int pkgLength);
 char verifyCrc(char *package, int pkgLength);
+
+void getResponse();
 
 void sendString(char *message, int msgLength);
 void getStringResponse();
