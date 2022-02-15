@@ -204,7 +204,7 @@ void getIntResponse(){
 
    int number;
    memcpy(&number, &responsePackage[3], 4);
-   printf("get_Response: number received is %d\n", number);
+   printf("getIntResponse: number received is %d\n", number);
 
    // TO-DO: verificar cabecalho
 
@@ -229,7 +229,7 @@ void getFloatResponse(){
 
    float number;
    memcpy(&number, &responsePackage[3], 4);
-   printf("get_Response: number received is %f\n", number);
+   printf("getFloatResponse: number received is %f\n", number);
 
    // TO-DO: verificar cabecalho
 
