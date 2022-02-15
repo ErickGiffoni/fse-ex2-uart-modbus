@@ -175,6 +175,8 @@ void sendInt(int number){
    return;
 } // end of sendInt
 
-// void getIntResponse(){
+void getIntResponse(){
+   getStringResponse();
 
-// } // end of getIntResponse
+   return;
+} // end of getIntResponse

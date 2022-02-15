@@ -21,6 +21,7 @@ int main(){
    getStringResponse();
 
    sendInt(49);
+   getIntResponse();
 
    closeUart();
 

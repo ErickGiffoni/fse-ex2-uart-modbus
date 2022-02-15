@@ -35,6 +35,6 @@ void sendString(char *message, int msgLength);
 void getStringResponse();
 
 void sendInt(int number);
-// void getIntResponse();
+void getIntResponse();
 
 #endif
